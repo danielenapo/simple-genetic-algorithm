@@ -70,9 +70,10 @@ function main(){
   do{
     calculateBestFitted();
     generations++;
+    alert(generations+" : fittest: "+bestFitted.fitness);
   }while(bestFitted.fitness!=8);
 
-  alert(generations);
+  alert("soluzione trovata alla generazione "+generations);
 }
 
 
