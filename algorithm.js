@@ -1,48 +1,31 @@
-//TO DO:
-//crossover
-
-
 main();
 
 function Individual(){
   this.fitness=0;
   this.numeroGeni=8;
   this.chromosome=[];
-  this.sex=0;
-  this.crossoverGenes=[];
-  function generateSexAndChromosome(){
+
+  this.generateChromosome= function(){
     for(var i=0; i<this.numeroGeni; i++){
-      this.chromosome[i].push(Math.round(Math.random()));//assegna valore random tra 0 e 1
+      this.chromosome.push(Math.round(Math.random()));//assegna valore random tra 0 e 1
     }
-    this.sex=Math.round(Math.random());
   }
 
-  /*function crossover(){
-    if(populaton[i].sex==0)
-      var i=3;
-    else
-      var i=0;
-
-    for(i<Math.round(numeroGeni/2); i++){
-      crossoverGenes[i].push(chromosome(i));
-    }
-      return crossoverGenes;
-  }*/
-
-  function calculateFitness(){
-    for(var i=0; i<subject.chromosome.length(); i++){
-      if (subject.chromosome[i]==1)
+  this.calculateFitness= function(){
+    for(var i=0; i<this.chromosome.length; i++){
+      if (this.chromosome[i]==1)
         this.fitness++;
     }
   }
 
-  function mutation(){
+  this.mutation= function(){
     if(Math.round(Math.random()*100)>=93){
+      alert("c'e' una mutazione!!!");
       for(var i=2; i<5; i++){
-        if(chromosome[i]==0)
-          chromosome[i]=1;
+        if(this.chromosome[i]==0)
+          this.chromosome[i]=1;
         else
-          chromosome[i]=0;
+          this.chromosome[i]=0;
       }
     }
   }
@@ -56,21 +39,26 @@ function main(){
 
   population=[];
   //riempi popolazione + inizializzazioni
-  for(int i=0; i<15; i++){
+  for(var i=0; i<5; i++){
     individuo= new Individual();
-    individuo.generateSexAndChromosome();
-    individuo.calculateFitness;
+    individuo.generateChromosome();
+    individuo.calculateFitness();
     population.push(individuo);
   }
-  bestFitted=new Individual();
+  bestFitted=new Individual(); bestFitted.fitness=0;
+  secondBestFitted= new Individual(); secondBestFitted.fitness=0;
   generations=0;
   isMutato=0;
 
   //INIZIO SIMULAZIONE
   do{
     calculateBestFitted();
+    calculateSecondBestFitted();
+    generateSon();
+    killTheWeakest();
+    killTheWeakest();
     generations++;
-    alert(generations+" : fittest: "+bestFitted.fitness);
+    alert(generations+" : fittest: "+ bestFitted.fitness+", "+secondBestFitted.fitness);
   }while(bestFitted.fitness!=8);
 
   alert("soluzione trovata alla generazione "+generations);
@@ -78,8 +66,49 @@ function main(){
 
 
 function calculateBestFitted(){
-  for(var i=0; i<population.length(); i++){
-    if(population[i].fitness>bestFitted)
+  for(var i=0; i<population.length; i++){
+    if(population[i].fitness>bestFitted.fitness)
       bestFitted=population[i];
   }
+}
+
+function calculateSecondBestFitted(){
+  for(var i=0; i<population.length; i++){
+    if(population[i].fitness<bestFitted.fitness && population[i].fitness>secondBestFitted.fitness)
+      secondBestFitted=population[i];
+  }
+}
+
+function generateSon(){
+  crossoverPoint=Math.round(Math.random()*7);
+  offspring1= new Individual();
+  offspring2= new Individual();
+  //inizio crossover
+  for(var i=0; i<crossoverPoint; i++){
+      offspring1.chromosome[i]=bestFitted.chromosome[i];
+      offspring2.chromosome[i]=secondBestFitted.chromosome[i];
+    }
+    for(var i=crossoverPoint; i<bestFitted.chromosome.length; i++){
+        offspring2.chromosome[i]=bestFitted.chromosome[i];
+        offspring1.chromosome[i]=secondBestFitted.chromosome[i];
+    }
+    //mutazioni
+    offspring1.mutation();offspring1.calculateFitness();
+    offspring2.mutation();offspring2.calculateFitness();
+    //nascita
+    population.push(offspring1);
+    population.push(offspring2);
+
+}
+
+function killTheWeakest(){
+  for(var i=0; i<population.length; i++){
+    weakest=new Individual();
+    weakest.fitness=8;
+    if(population[i].fitness<population[i].chromosome.length){
+      weakest=population[i];
+      indexWeakest=i;
+    }
+  }
+    population.splice(weakest, 1);
 }
