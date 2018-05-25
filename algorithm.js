@@ -12,6 +12,7 @@ function Individual(){
   }
 
   this.calculateFitness= function(){
+    this.fitness=0;
     for(var i=0; i<this.chromosome.length; i++){
       if (this.chromosome[i]==1)
         this.fitness++;
@@ -49,16 +50,20 @@ function main(){
   secondBestFitted= new Individual(); secondBestFitted.fitness=0;
   generations=0;
   isMutato=0;
-
+  calculateBestFitted();
+  calculateSecondBestFitted();
   //INIZIO SIMULAZIONE
   do{
-    calculateBestFitted();
-    calculateSecondBestFitted();
     generateSon();
     killTheWeakest();
     killTheWeakest();
+    calculateBestFitted();
+    calculateSecondBestFitted();
     generations++;
-    alert(generations+" : fittest: "+ bestFitted.fitness+", "+secondBestFitted.fitness);
+    message="generation "+generations;
+    document.getElementById("numero").innerHTML=message;
+    message="fitness: "+bestFitted.fitness;
+    document.getElementById("fittest").innerHTML=message;
   }while(bestFitted.fitness!=8);
 
   alert("soluzione trovata alla generazione "+generations);
@@ -67,6 +72,7 @@ function main(){
 
 function calculateBestFitted(){
   for(var i=0; i<population.length; i++){
+    population[i].calculateFitness();
     if(population[i].fitness>bestFitted.fitness)
       bestFitted=population[i];
   }
@@ -82,7 +88,10 @@ function calculateSecondBestFitted(){
 function generateSon(){
   crossoverPoint=Math.round(Math.random()*7);
   offspring1= new Individual();
+  offspring1.generateChromosome();
   offspring2= new Individual();
+  offspring2.generateChromosome();
+
   //inizio crossover
   for(var i=0; i<crossoverPoint; i++){
       offspring1.chromosome[i]=bestFitted.chromosome[i];
@@ -93,8 +102,10 @@ function generateSon(){
         offspring1.chromosome[i]=secondBestFitted.chromosome[i];
     }
     //mutazioni
-    offspring1.mutation();offspring1.calculateFitness();
-    offspring2.mutation();offspring2.calculateFitness();
+    offspring1.mutation();
+    offspring1.calculateFitness();
+    offspring2.mutation();
+    offspring2.calculateFitness();
     //nascita
     population.push(offspring1);
     population.push(offspring2);
