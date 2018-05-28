@@ -65,11 +65,11 @@ function main(){
     document.getElementById("fittest").innerHTML=message;
     if(generations>300){
       alert("convergenza prematura");
-      return;
+        return;
     }
 
   }while(bestFitted.fitness!=bestFitted.chromosome.length);
-  alert("soluzione trovata alla generazione "+generations);
+  //alert("soluzione trovata alla generazione "+generations);
 }
 
 function calculateBestFitted(){
@@ -86,11 +86,14 @@ function selection(){
         matingPool.push(population[f]);
     }
   }
-}
-function generateSon(){
   mom=matingPool[Math.floor(Math.random()*matingPool.length)];
   dad=matingPool[Math.floor(Math.random()*matingPool.length)];
   matingPool.slice(0,matingPool.length);//svuoto l'array
+  if(mom===dad)
+    selection();
+}
+function generateSon(){
+
   crossoverPoint=Math.round(Math.random()*7);
   offspring1= new Individual();
   offspring1.generateChromosome();
