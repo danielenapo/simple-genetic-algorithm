@@ -59,15 +59,7 @@ function main(){
     killTheWeakest();
     calculateBestFitted();
     generations++;
-    message="generation "+generations;
-    document.getElementById("numero").innerHTML=message;
-    message="fitness: "+bestFitted.fitness;
-    document.getElementById("fittest").innerHTML=message;
-    if(generations>300){
-      alert("convergenza prematura");
-        return;
-    }
-
+    UI();
   }while(bestFitted.fitness!=bestFitted.chromosome.length);
   //alert("soluzione trovata alla generazione "+generations);
 }
@@ -129,4 +121,13 @@ function killTheWeakest(){
     }
   }
     population.splice(weakest, 1);
+}
+
+function UI(){
+  message="generation "+generations;
+  document.getElementById("numero").innerHTML=message;
+  message="fitness: "+bestFitted.fitness;
+  document.getElementById("fittest").innerHTML=message;
+  if(generations>300)
+    alert("convergenza prematura...");
 }
